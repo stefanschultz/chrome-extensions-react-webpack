@@ -1,93 +1,154 @@
-const path = require('path');
-const CopyPlugin = require('copy-webpack-plugin');
-const HtmlPlugin = require('html-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const tailwindcss = require('tailwindcss');
-const autoprefixer = require('autoprefixer');
+const path = require("path");
+const fs = require("fs");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const ZipWebpackPlugin = require('zip-webpack-plugin');
+const tailwindcss = require("tailwindcss");
+const autoprefixer = require("autoprefixer");
+
+const packageInfo = JSON.parse(fs.readFileSync("package.json", "utf-8"));
+
+const fileExtensions = [
+    "jpg",
+    "jpeg",
+    "png",
+    "gif",
+    "eot",
+    "otf",
+    "svg",
+    "ttf",
+    "woff",
+    "woff2"
+];
 
 module.exports = {
     entry: {
-        popup: path.resolve('src/popup/index.tsx'),
-        options: path.resolve('src/options/index.tsx'),
-        background: path.resolve('src/background/background.ts'),
-        contentScript: path.resolve('src/contentScript/contentScript.ts'),
-        newTab: path.resolve('src/tabs/index.tsx'),
+        popup: path.resolve("src/popup/index.tsx"),
+        options: path.resolve("src/options/index.tsx"),
+        background: path.resolve("src/background/background.ts"),
+        contentScript: path.resolve("src/contentScript/contentScript.ts"),
+        newTab: path.resolve("src/tabs/index.tsx")
     },
 
     module: {
         rules: [
             {
-                use: 'ts-loader',
-                test: /\.tsx?$/,
-                exclude: /node_modules/,
+                // look for ".ts" or ".tsx" files in the "src" directory
+                use: "ts-loader",
+                test: /\.(ts|tsx)$/,
+                exclude: /node_modules/
             },
 
             {
-                test: /\.css$/i,
+                // look for ".js" or ".jsx" files in the "src" directory
+                test: /\.(js|jsx)$/,
                 use: [
-                    'style-loader',
                     {
-                        loader: 'css-loader',
-                        options: {
-                            importLoaders: 1,
-                        },
+                        loader: "source-map-loader"
                     },
                     {
-                        loader: 'postcss-loader', // postcss loader needed for tailwindcss
+                        loader: "babel-loader",
+                        options: {
+                            presets: [
+                                "@babel/preset-env",
+                                "@babel/preset-react"
+                            ]
+                        }
+                    }
+                ],
+                exclude: /node_modules/
+            },
+
+            {
+                // look for "".css" or "".scss" files in the "src" directory
+                test: /\.(css|scss)$/,
+                use: [
+                    {
+                        loader: "style-loader"
+                    },
+                    {
+                        loader: "css-loader",
+                        options: {
+                            importLoaders: 1
+                        }
+                    },
+                    {
+                        loader: "sass-loader",
+                        options: {
+                            sourceMap: true
+                        }
+                    },
+                    {
+                        loader: "postcss-loader", // postcss loader needed for tailwindcss
                         options: {
                             postcssOptions: {
-                                ident: 'postcss',
-                                plugins: [tailwindcss, autoprefixer],
-                            },
-                        },
-                    },
-                ],
+                                ident: "postcss",
+                                plugins: [tailwindcss, autoprefixer]
+                            }
+                        }
+                    }
+                ]
             },
 
             {
-                type: 'assets/resource',
-                test: /\.(png|jpg|jpeg|gif|woff|woff2|tff|eot|svg)$/,
+                // look for assets in the "src" directory
+                type: "assets/resource",
+                // test: /\.(png|jpg|jpeg|gif|woff|woff2|ttf|eot|svg)$/,
+                test: new RegExp(`\\.(${fileExtensions.join('|')})$`),
+                exclude: /node_modules/
             },
+
+            {
+                // look for ".html" files in the "src" directory
+                test: /\.html$/,
+                loader: "html-loader",
+                exclude: /node_modules/,
+            }
         ]
     },
 
-    "plugins": [
+    plugins: [
         new CleanWebpackPlugin({
             cleanStaleWebpackAssets: false
         }),
-        new CopyPlugin({
+        new CopyWebpackPlugin({
             patterns: [{
-                from: path.resolve('src/static'),
-                to: path.resolve('dist')
+                from: path.resolve("src/static"),
+                to: path.resolve("build")
             }]
         }),
         ...getHtmlPlugins([
-            'popup',
-            'options',
-            'newTab'
-        ])
+            "popup",
+            "options",
+            "newTab"
+        ]),
+        new ZipWebpackPlugin({
+            filename: `${packageInfo.name}-${packageInfo.version}.zip`,
+            path: path.join(__dirname, "./zip")
+        })
     ],
 
     resolve: {
-        extensions: ['.tsx', '.ts', '.jsx', '.js']
+        extensions: [".tsx", ".ts", ".jsx", ".js"]
     },
 
     output: {
-        filename: '[name].bundle.js',
-        path: path.join(__dirname, 'dist'),
+        filename: "[name].bundle.js",
+        path: path.join(__dirname, "build"),
         clean: true
     },
 
     optimization: {
         splitChunks: {
-            chunks: 'all',
+            chunks: "all"
         }
     }
 }
 
 function getHtmlPlugins(chunks) {
-    return chunks.map(chunk => new HtmlPlugin({
-        title: 'Chrome Extensions with React and Webpack',
+    return chunks.map(chunk => new HtmlWebpackPlugin({
+        title: "Chrome Extensions with React and Webpack",
         filename: `${chunk}.html`,
         chunks: [chunk]
     }))
