@@ -22,9 +22,11 @@ const fileExtensions = [
     "woff2"
 ];
 
+var alias = {};
+
 module.exports = {
     entry: {
-        popup: path.resolve("src/popup/index.tsx"),
+        popup: path.resolve("src/components/Popup/index.tsx"),
         options: path.resolve("src/options/index.tsx"),
         background: path.resolve("src/background/background.ts"),
         contentScript: path.resolve("src/contentScript/contentScript.ts"),
@@ -130,7 +132,10 @@ module.exports = {
     ],
 
     resolve: {
-        extensions: [".tsx", ".ts", ".jsx", ".js"]
+        alias: alias,
+        extensions: fileExtensions
+            .map((extension) => '.' + extension)
+            .concat([".tsx", ".ts", ".jsx", ".js", ".css"])
     },
 
     output: {
