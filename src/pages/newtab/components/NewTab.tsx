@@ -1,11 +1,10 @@
-import React from 'react'
-import { Routes, Route } from 'react-router-dom'
-import Home from './components/Home'
-import About from './components/About'
-import './tabs.css'
-import { Link } from 'react-router-dom'
+import React from "react";
+import { Routes, Route, Link } from "react-router-dom";
 
-function Tabs() {
+import Home from "./Home";
+import About from "./About";
+
+const NewTab = () => {
     return (
         <div>
             <ul>
@@ -21,7 +20,7 @@ function Tabs() {
                 <Route path="/about" element={<About />} />
             </Routes>
         </div>
-    )
-}
+    );
+};
 
-export default Tabs;
+export default NewTab;

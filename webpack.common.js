@@ -26,11 +26,11 @@ var alias = {};
 
 module.exports = {
     entry: {
-        popup: path.resolve("src/components/Popup/index.tsx"),
-        options: path.resolve("src/options/index.tsx"),
-        background: path.resolve("src/background/background.ts"),
-        contentScript: path.resolve("src/contentScript/contentScript.ts"),
-        newTab: path.resolve("src/tabs/index.tsx")
+        popup: path.resolve("src/pages/popup/components/index.tsx"),
+        options: path.resolve("src/pages/options/index.tsx"),
+        background: path.resolve("src/pages/background/background.ts"),
+        contentScript: path.resolve("src/pages/contentScript/contentScript.ts"),
+        newtab: path.resolve("src/pages/newtab/components/index.tsx")
     },
 
     module: {
