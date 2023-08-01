@@ -27,7 +27,7 @@ var alias = {};
 module.exports = {
     entry: {
         popup: path.resolve("src/pages/popup/components/index.tsx"),
-        options: path.resolve("src/pages/options/index.tsx"),
+        options: path.resolve("src/pages/options/components/index.tsx"),
         background: path.resolve("src/pages/background/background.ts"),
         contentScript: path.resolve("src/pages/contentScript/contentScript.ts"),
         newtab: path.resolve("src/pages/newtab/components/index.tsx")
@@ -123,7 +123,7 @@ module.exports = {
         ...getHtmlPlugins([
             "popup",
             "options",
-            "newTab"
+            "newtab"
         ]),
         new ZipWebpackPlugin({
             filename: `${packageInfo.name}-${packageInfo.version}.zip`,
