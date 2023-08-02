@@ -1,6 +1,6 @@
 import React from "react";
 
-import "../styles/Panel.styled.css";
+import "../styles/Panel.styles.css";
 
 const Panel = () => {
     return (
