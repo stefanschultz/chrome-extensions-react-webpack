@@ -1,9 +1,8 @@
-chrome.runtime.sendMessage('I am loading content script', (response) => {
+chrome.runtime.sendMessage("Loading the content script...", (response) => {
     console.log(response);
-    console.log('I am content script')
-
-})
+    console.log("This is the content script.");
+});
 
 window.onload = (event) => {
-    console.log('page is fully loaded');
+    console.log("Page is fully loaded.");
 };

@@ -30,7 +30,9 @@ module.exports = {
         options: path.resolve("src/pages/options/components/index.tsx"),
         background: path.resolve("src/pages/background/background.ts"),
         contentScript: path.resolve("src/pages/contentScript/contentScript.ts"),
-        newtab: path.resolve("src/pages/newtab/components/index.tsx")
+        newtab: path.resolve("src/pages/newtab/components/index.tsx"),
+        devtools: path.resolve("src/pages/devtools/index.ts"),
+        panel: path.resolve("src/pages/panel/components/index.tsx")
     },
 
     module: {
@@ -123,7 +125,9 @@ module.exports = {
         ...getHtmlPlugins([
             "popup",
             "options",
-            "newtab"
+            "newtab",
+            "devtools",
+            "panel"
         ]),
         new ZipWebpackPlugin({
             filename: `${packageInfo.name}-${packageInfo.version}.zip`,
@@ -153,8 +157,9 @@ module.exports = {
 
 function getHtmlPlugins(chunks) {
     return chunks.map(chunk => new HtmlWebpackPlugin({
-        title: "Chrome Extensions with React and Webpack",
+        template: path.join(__dirname, 'src', 'pages', chunk, 'index.html'),
         filename: `${chunk}.html`,
-        chunks: [chunk]
+        chunks: [chunk],
+        cache: false,
     }))
 }
