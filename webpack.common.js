@@ -119,7 +119,7 @@ module.exports = {
         new CopyWebpackPlugin({
             patterns: [{
                 from: path.resolve("src/static"),
-                to: path.resolve("build")
+                to: path.resolve("dist")
             }]
         }),
         ...getHtmlPlugins([
@@ -144,7 +144,7 @@ module.exports = {
 
     output: {
         filename: "[name].bundle.js",
-        path: path.join(__dirname, "build"),
+        path: path.join(__dirname, "dist"),
         clean: true
     },
 

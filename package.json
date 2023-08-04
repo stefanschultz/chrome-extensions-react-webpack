@@ -20,12 +20,12 @@
   },
   "devDependencies": {
     "@babel/core": "^7.22.9",
+    "@babel/eslint-parser": "^7.22.9",
     "@babel/preset-env": "^7.22.9",
     "@babel/preset-react": "^7.22.5",
     "@types/chrome": "^0.0.242",
     "@types/react": "^18.2.17",
     "@types/react-dom": "^18.2.7",
-    "babel-eslint": "^10.1.0",
     "babel-loader": "^9.1.3",
     "babel-preset-react-app": "^10.0.1",
     "clean-webpack-plugin": "^4.0.0",
