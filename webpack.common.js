@@ -29,7 +29,7 @@ module.exports = {
         popup: path.resolve("src/pages/popup/components/index.tsx"),
         options: path.resolve("src/pages/options/components/index.tsx"),
         background: path.resolve("src/pages/background/background.ts"),
-        contentScript: path.resolve("src/pages/contentScript/contentScript.ts"),
+        contentScript: path.resolve("src/pages/contentScript/index.ts"),
         newtab: path.resolve("src/pages/newtab/components/index.tsx"),
         devtools: path.resolve("src/pages/devtools/index.ts"),
         panel: path.resolve("src/pages/panel/components/index.tsx")
@@ -121,6 +121,15 @@ module.exports = {
                 from: path.resolve("src/static"),
                 to: path.resolve("dist")
             }]
+        }),
+        new CopyWebpackPlugin({
+            patterns: [
+                {
+                    from: 'src/pages/contentScript/content.styles.css',
+                    to: path.join(__dirname, 'dist'),
+                    force: true,
+                },
+            ],
         }),
         ...getHtmlPlugins([
             "popup",
