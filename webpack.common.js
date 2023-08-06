@@ -157,11 +157,11 @@ module.exports = {
         clean: true
     },
 
-    optimization: {
+    /* optimization: {
         splitChunks: {
             chunks: "all"
         }
-    }
+    } */
 }
 
 function getHtmlPlugins(chunks) {
