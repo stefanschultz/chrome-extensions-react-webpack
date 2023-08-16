@@ -7,6 +7,12 @@ const ZipWebpackPlugin = require('zip-webpack-plugin');
 const tailwindcss = require("tailwindcss");
 const autoprefixer = require("autoprefixer");
 
+const createStyledComponentsTransformer = require('typescript-plugin-styled-components').default;
+const styledComponentsTransformer = createStyledComponentsTransformer({
+    displayName: true,
+    fileName: false
+});
+
 const packageInfo = JSON.parse(fs.readFileSync("package.json", "utf-8"));
 
 const fileExtensions = [
@@ -39,7 +45,12 @@ module.exports = {
         rules: [
             {
                 // look for ".ts" or ".tsx" files in the "src" directory
-                use: "ts-loader",
+                use: {
+                    loader: "ts-loader",
+                    options: {
+                        getCustomTransformers: () => ({ before: [styledComponentsTransformer] })
+                    }
+                },
                 test: /\.(ts|tsx)$/,
                 exclude: /node_modules/
             },
@@ -57,6 +68,13 @@ module.exports = {
                             presets: [
                                 "@babel/preset-env",
                                 "@babel/preset-react"
+                            ],
+                            plugins: [
+                                "babel-plugin-styled-components",
+                                {
+                                    displayName: true,
+                                    fileName: false
+                                }
                             ]
                         }
                     }
